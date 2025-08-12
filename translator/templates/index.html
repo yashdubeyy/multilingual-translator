@@ -1,0 +1,784 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="translator-card">
+    <div class="card-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-translate me-2"></i>Translate Text</h5>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" id="clearBtn" title="Clear all text">
+                    <i class="bi bi-eraser"></i> Clear
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-5 col-md-12 mb-4 mb-lg-0">
+                <div class="form-group">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="sourceLanguage" class="form-label fw-medium">Source Language:</label>
+                        <span class="badge bg-primary bg-opacity-10 text-primary" id="sourceCharCount">0 characters</span>
+                    </div>
+                    <select class="form-select mb-3 shadow-sm" id="sourceLanguage">
+                        {% for code, name in languages.items() %}
+                        <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sourceText" class="form-label fw-medium">Enter text to translate:</label>
+                    <div class="position-relative">
+                        <textarea class="form-control shadow-sm" id="sourceText" rows="6" placeholder="Type or paste your text here..."></textarea>
+                        <div class="position-absolute" style="right: 10px; top: 10px;">
+                            <div class="d-flex">
+                                <button class="btn btn-sm btn-light rounded-circle me-1" id="detectLanguageBtn" title="Auto detect language">
+                                    <i class="bi bi-magic"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light rounded-circle" id="clearSourceBtn" title="Clear text">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        <button class="btn btn-sm btn-outline-primary me-2 rounded-pill px-3" id="listenSourceBtn" title="Listen">
+                            <i class="bi bi-volume-up"></i> <span class="d-none d-sm-inline">Listen</span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" id="copySourceBtn" title="Copy to clipboard">
+                            <i class="bi bi-clipboard"></i> <span class="d-none d-sm-inline">Copy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-12 d-flex flex-lg-column flex-row align-items-center justify-content-center mb-4 mb-lg-0">
+                <button class="btn btn-primary mb-lg-3 me-3 me-lg-0 shadow-sm rounded-circle p-2 p-sm-3" id="swapBtn" title="Swap languages">
+                    <i class="bi bi-arrow-left-right"></i>
+                </button>
+                <button class="btn btn-primary shadow-sm px-3 px-sm-4 py-2" id="translateBtn">
+                    Translate <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+                <div class="spinner-border text-primary mt-lg-3 ms-3 ms-lg-0" id="loadingSpinner" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="progress mt-lg-3 mt-0 ms-3 ms-lg-0 w-100 d-none d-lg-block" style="height: 4px;">
+                    <div class="progress-bar bg-primary" id="translationProgress" role="progressbar" style="width: 0%"></div>
+                </div>
+                <!-- Mobile progress bar, horizontal orientation -->
+                <div class="progress mt-3 w-100 d-block d-lg-none" style="height: 4px;">
+                    <div class="progress-bar bg-primary" id="translationProgressMobile" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="col-lg-5 col-md-12">
+                <div class="form-group">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label for="targetLanguage" class="form-label fw-medium">Target Language:</label>
+                        <span class="badge bg-primary bg-opacity-10 text-primary" id="targetCharCount">0 characters</span>
+                    </div>
+                    <select class="form-select mb-3 shadow-sm" id="targetLanguage">
+                        {% for code, name in languages.items() %}
+                        <option value="{{ code }}" {% if code == 'fr' %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="translatedText" class="form-label fw-medium">Translation:</label>
+                    <div id="translationResult" class="animate__animated shadow-sm">
+                        <p id="translatedText"></p>
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        <button class="btn btn-sm btn-outline-primary me-2 rounded-pill px-3" id="listenTargetBtn" title="Listen">
+                            <i class="bi bi-volume-up"></i> <span class="d-none d-sm-inline">Listen</span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" id="copyTargetBtn" title="Copy to clipboard">
+                            <i class="bi bi-clipboard"></i> <span class="d-none d-sm-inline">Copy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add additional features cards -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-4 col-md-6 col-12">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-lightning-charge-fill text-warning fs-3 mb-3"></i>
+                <h5 class="fw-bold">Fast Translation</h5>
+                <p class="text-muted mb-0">Quickly translate between multiple languages with optimized performance</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-12">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-globe2 text-primary fs-3 mb-3"></i>
+                <h5 class="fw-bold">Multiple Languages</h5>
+                <p class="text-muted mb-0">Support for English, French, Spanish, German, Hindi and more</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-12 mx-md-auto">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-clock-history text-success fs-3 mb-3"></i>
+                <h5 class="fw-bold">Translation History</h5>
+                <p class="text-muted mb-0">Keep track of your translations with our convenient history sidebar</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let translationInProgress = false;
+let currentTaskId = null;
+let pollingInterval = null;
+let progressInterval = null;
+let typingTimer;
+const doneTypingInterval = 800; // Wait time after typing stops (ms)
+const translationHistory = [];
+const maxHistoryItems = 15;
+
+// Initialize all UI elements and event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize character counters
+    updateCharCount('sourceText', 'sourceCharCount');
+    
+    // Auto-translate after typing stops
+    const sourceTextArea = document.getElementById('sourceText');
+    sourceTextArea.addEventListener('keyup', function() {
+        clearTimeout(typingTimer);
+        updateCharCount('sourceText', 'sourceCharCount');
+        if (this.value) {
+            typingTimer = setTimeout(translateText, doneTypingInterval);
+        }
+    });
+    
+    // Stop the timer if the user continues typing
+    sourceTextArea.addEventListener('keydown', function() {
+        clearTimeout(typingTimer);
+    });
+    
+    // Main translation button
+    document.getElementById('translateBtn').addEventListener('click', translateText);
+    
+    // Swap languages button
+    document.getElementById('swapBtn').addEventListener('click', swapLanguages);
+    
+    // Add event listeners for language selects
+    document.getElementById('sourceLanguage').addEventListener('change', function() {
+        if (document.getElementById('sourceText').value.trim()) {
+            translateText();
+        }
+    });
+    
+    document.getElementById('targetLanguage').addEventListener('change', function() {
+        if (document.getElementById('sourceText').value.trim()) {
+            translateText();
+        }
+    });
+    
+    // Add event listeners for copy buttons
+    document.getElementById('copySourceBtn').addEventListener('click', function() {
+        copyToClipboard('sourceText');
+    });
+    
+    document.getElementById('copyTargetBtn').addEventListener('click', function() {
+        copyToClipboard('translatedText', true);
+    });
+    
+    // Add event listeners for listen buttons
+    document.getElementById('listenSourceBtn').addEventListener('click', function() {
+        const text = document.getElementById('sourceText').value;
+        const lang = document.getElementById('sourceLanguage').value;
+        speakText(text, lang);
+    });
+    
+    document.getElementById('listenTargetBtn').addEventListener('click', function() {
+        const text = document.getElementById('translatedText').textContent;
+        const lang = document.getElementById('targetLanguage').value;
+        speakText(text, lang);
+    });
+    
+    // Add event listener for clear button
+    document.getElementById('clearBtn').addEventListener('click', clearAll);
+    
+    // Add event listener for clear history button
+    document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+        translationHistory.length = 0;
+        updateHistoryUI();
+        updateHistoryCount();
+        // Show empty state and close sidebar
+        document.getElementById('sidebar').classList.remove('open');
+    });
+    
+    // Clear source text button
+    document.getElementById('clearSourceBtn').addEventListener('click', function() {
+        document.getElementById('sourceText').value = '';
+        updateCharCount('sourceText', 'sourceCharCount');
+        pulseEffect('sourceText');
+    });
+    
+    // Auto-detect language button (simulated)
+    document.getElementById('detectLanguageBtn').addEventListener('click', function() {
+        const sourceText = document.getElementById('sourceText').value;
+        if (!sourceText.trim()) return;
+        
+        // Show loading effect
+        this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+        this.disabled = true;
+        
+        // Simulate detection (would be replaced with actual API call)
+        setTimeout(() => {
+            const languages = ['en', 'fr', 'es', 'de', 'hi'];
+            const detectedLang = languages[Math.floor(Math.random() * languages.length)];
+            document.getElementById('sourceLanguage').value = detectedLang;
+            
+            // Restore button
+            this.innerHTML = '<i class="bi bi-magic"></i>';
+            this.disabled = false;
+            
+            // Show feedback toast
+            showToast('Language detected: ' + document.querySelector(`#sourceLanguage option[value="${detectedLang}"]`).textContent);
+            
+            // Translate if text exists
+            if (sourceText.trim()) {
+                translateText();
+            }
+        }, 1000);
+    });
+    
+    // Create toast container
+    createToastContainer();
+    
+    // Load history from local storage if available
+    loadHistory();
+    
+    // Update history count badge
+    updateHistoryCount();
+});
+
+function translateText() {
+    const sourceText = document.getElementById('sourceText').value;
+    const sourceLang = document.getElementById('sourceLanguage').value;
+    const targetLang = document.getElementById('targetLanguage').value;
+    
+    if (!sourceText.trim()) {
+        return;
+    }
+    
+    // Show loading spinner and progress bar
+    document.getElementById('loadingSpinner').style.display = 'inline-block';
+    document.getElementById('translateBtn').style.display = 'none';
+    startProgressAnimation();
+    
+    // Cancel any ongoing translation
+    if (translationInProgress && pollingInterval) {
+        clearInterval(pollingInterval);
+    }
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('text', sourceText);
+    formData.append('source_lang', sourceLang);
+    formData.append('target_lang', targetLang);
+    
+    // Send translation request
+    fetch('/translate', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        translationInProgress = true;
+        currentTaskId = data.task_id;
+        
+        // Set up polling for translation status
+        pollingInterval = setInterval(checkTranslationStatus, 500);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('translatedText').textContent = 'An error occurred during translation.';
+        
+        // Hide loading spinner
+        document.getElementById('loadingSpinner').style.display = 'none';
+        document.getElementById('translateBtn').style.display = 'inline-block';
+        stopProgressAnimation();
+        
+        // Show error toast
+        showToast('Translation failed. Please try again.', 'error');
+    });
+}
+
+function checkTranslationStatus() {
+    if (!currentTaskId) return;
+    
+    fetch(`/translation_status?task_id=${currentTaskId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'completed') {
+                // Update the translation result with animation
+                const resultElement = document.getElementById('translationResult');
+                resultElement.classList.add('animate__animated', 'animate__fadeIn');
+                
+                document.getElementById('translatedText').textContent = data.translation;
+                updateCharCount('translatedText', 'targetCharCount', true);
+                
+                // Hide loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('translateBtn').style.display = 'inline-block';
+                stopProgressAnimation();
+                
+                // Stop polling
+                clearInterval(pollingInterval);
+                translationInProgress = false;
+                
+                // Add to history
+                const historyItem = {
+                    source: document.getElementById('sourceText').value,
+                    sourceLang: document.getElementById('sourceLanguage').value,
+                    target: data.translation,
+                    targetLang: document.getElementById('targetLanguage').value,
+                    timestamp: new Date()
+                };
+                
+                addToHistory(historyItem);
+                updateHistoryCount();
+                saveHistory();
+                
+                // Show success toast
+                const sourceLang = document.querySelector(`#sourceLanguage option[value="${historyItem.sourceLang}"]`).textContent;
+                const targetLang = document.querySelector(`#targetLanguage option[value="${historyItem.targetLang}"]`).textContent;
+                showToast(`Translated from ${sourceLang} to ${targetLang}`);
+                
+                // Remove animation classes after animation completes
+                setTimeout(() => {
+                    resultElement.classList.remove('animate__animated', 'animate__fadeIn');
+                }, 1000);
+                
+                currentTaskId = null;
+            }
+        })
+        .catch(error => {
+            console.error('Error checking translation status:', error);
+        });
+}
+
+// Add language swap functionality
+function swapLanguages() {
+    const sourceSelect = document.getElementById('sourceLanguage');
+    const targetSelect = document.getElementById('targetLanguage');
+    const sourceText = document.getElementById('sourceText');
+    const translatedText = document.getElementById('translatedText');
+    
+    // Animate the swap
+    const sourceSection = sourceSelect.closest('.col-md-5');
+    const targetSection = targetSelect.closest('.col-md-5');
+    
+    sourceSection.classList.add('animate__animated', 'animate__fadeOut');
+    targetSection.classList.add('animate__animated', 'animate__fadeOut');
+    
+    setTimeout(() => {
+        // Swap the selected languages
+        const tempLang = sourceSelect.value;
+        sourceSelect.value = targetSelect.value;
+        targetSelect.value = tempLang;
+        
+        // Swap the text content
+        const tempText = sourceText.value;
+        sourceText.value = translatedText.textContent;
+        updateCharCount('sourceText', 'sourceCharCount');
+        
+        sourceSection.classList.remove('animate__fadeOut');
+        targetSection.classList.remove('animate__fadeOut');
+        sourceSection.classList.add('animate__fadeIn');
+        targetSection.classList.add('animate__fadeIn');
+        
+        setTimeout(() => {
+            sourceSection.classList.remove('animate__animated', 'animate__fadeIn');
+            targetSection.classList.remove('animate__animated', 'animate__fadeIn');
+            
+            // If we have text to translate after swapping, trigger translation
+            if (sourceText.value.trim()) {
+                translateText();
+            }
+        }, 500);
+    }, 300);
+    
+    // Show toast
+    showToast('Languages swapped');
+}
+
+// Helper function to copy text to clipboard
+function copyToClipboard(elementId, isContent = false) {
+    const text = isContent 
+        ? document.getElementById(elementId).textContent 
+        : document.getElementById(elementId).value;
+        
+    if (!text) return;
+    
+    navigator.clipboard.writeText(text).then(() => {
+        // Show a tooltip or some indicator that text was copied
+        const btn = isContent ? document.getElementById('copyTargetBtn') : document.getElementById('copySourceBtn');
+        const originalHtml = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="bi bi-check2"></i> Copied';
+        btn.classList.add('btn-success');
+        btn.classList.remove('btn-outline-primary');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-primary');
+        }, 1500);
+        
+        // Show toast notification
+        showToast('Text copied to clipboard');
+    }).catch(err => {
+        showToast('Failed to copy text: ' + err, 'error');
+    });
+}
+
+// Helper function for text-to-speech
+function speakText(text, lang) {
+    if (!text || !lang) return;
+    
+    // Stop any ongoing speech
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang === 'en' ? 'en-US' : 
+                         lang === 'fr' ? 'fr-FR' : 
+                         lang === 'es' ? 'es-ES' : 
+                         lang === 'de' ? 'de-DE' :
+                         lang === 'hi' ? 'hi-IN' : 'en-US';
+        
+        // Show toast notification
+        showToast('Playing audio', 'info');
+        
+        window.speechSynthesis.speak(utterance);
+    } else {
+        showToast('Text-to-speech not supported in your browser', 'warning');
+    }
+}
+
+// Helper function to update character count
+function updateCharCount(textElementId, countElementId, isContent = false) {
+    const text = isContent 
+        ? document.getElementById(textElementId).textContent 
+        : document.getElementById(textElementId).value;
+    const count = text ? text.length : 0;
+    const badge = document.getElementById(countElementId);
+    badge.textContent = `${count} characters`;
+    
+    // Add visual feedback for long texts
+    if (count > 500) {
+        badge.classList.add('bg-warning', 'text-dark');
+        badge.classList.remove('bg-primary', 'bg-opacity-10', 'text-primary');
+    } else {
+        badge.classList.add('bg-primary', 'bg-opacity-10', 'text-primary');
+        badge.classList.remove('bg-warning', 'text-dark');
+    }
+}
+
+// Progress bar animation
+function startProgressAnimation() {
+    const progressBar = document.getElementById('translationProgress');
+    const progressBarMobile = document.getElementById('translationProgressMobile');
+    let width = 0;
+    
+    // Reset progress
+    progressBar.style.width = '0%';
+    progressBarMobile.style.width = '0%';
+    
+    progressInterval = setInterval(() => {
+        if (width >= 90) {
+            clearInterval(progressInterval);
+        } else {
+            width += Math.random() * 3;
+            if (width > 90) width = 90;
+            progressBar.style.width = width + '%';
+            progressBarMobile.style.width = width + '%';
+        }
+    }, 100);
+}
+
+function stopProgressAnimation() {
+    if (progressInterval) {
+        clearInterval(progressInterval);
+    }
+    
+    const progressBar = document.getElementById('translationProgress');
+    const progressBarMobile = document.getElementById('translationProgressMobile');
+    progressBar.style.width = '100%';
+    progressBarMobile.style.width = '100%';
+    
+    setTimeout(() => {
+        progressBar.style.width = '0%';
+        progressBarMobile.style.width = '0%';
+    }, 500);
+}
+
+// Clear all text fields
+function clearAll() {
+    // Animate the clear
+    const sourceText = document.getElementById('sourceText');
+    const translationResult = document.getElementById('translationResult');
+    
+    if (sourceText.value || document.getElementById('translatedText').textContent) {
+        sourceText.classList.add('animate__animated', 'animate__fadeOut');
+        translationResult.classList.add('animate__animated', 'animate__fadeOut');
+        
+        setTimeout(() => {
+            sourceText.value = '';
+            document.getElementById('translatedText').textContent = '';
+            updateCharCount('sourceText', 'sourceCharCount');
+            updateCharCount('translatedText', 'targetCharCount', true);
+            
+            sourceText.classList.remove('animate__fadeOut');
+            translationResult.classList.remove('animate__fadeOut');
+            sourceText.classList.add('animate__fadeIn');
+            translationResult.classList.add('animate__fadeIn');
+            
+            setTimeout(() => {
+                sourceText.classList.remove('animate__animated', 'animate__fadeIn');
+                translationResult.classList.remove('animate__animated', 'animate__fadeIn');
+            }, 500);
+        }, 300);
+        
+        showToast('All text cleared');
+    }
+}
+
+// Translation history management
+function addToHistory(item) {
+    // Add to the beginning of the array
+    translationHistory.unshift(item);
+    
+    // Keep only the maximum number of items
+    if (translationHistory.length > maxHistoryItems) {
+        translationHistory.pop();
+    }
+    
+    updateHistoryUI();
+    
+    // Notify user about history
+    if (translationHistory.length === 1) {
+        // First translation added to history
+        const historyBadge = document.querySelector('.history-badge');
+        historyBadge.classList.add('animate__animated', 'animate__heartBeat');
+        setTimeout(() => {
+            historyBadge.classList.remove('animate__animated', 'animate__heartBeat');
+        }, 1500);
+    }
+}
+
+// Toast notification system
+function createToastContainer() {
+    const toastContainer = document.createElement('div');
+    toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+    toastContainer.style.zIndex = '1080';
+    toastContainer.id = 'toastContainer';
+    document.body.appendChild(toastContainer);
+}
+
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toastContainer');
+    const toastId = 'toast-' + Date.now();
+    const bgClass = type === 'success' ? 'bg-success' : 
+                   type === 'error' ? 'bg-danger' : 
+                   type === 'warning' ? 'bg-warning' : 'bg-primary';
+    
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center ${bgClass} text-white border-0 animate__animated animate__fadeInUp`;
+    toast.id = toastId;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">
+                ${message}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    // Initialize and show toast
+    const bsToast = new bootstrap.Toast(toast, {
+        autohide: true,
+        delay: 3000
+    });
+    bsToast.show();
+    
+    // Remove from DOM after hiding
+    toast.addEventListener('hidden.bs.toast', function() {
+        toast.remove();
+    });
+}
+
+// Apply pulse animation effect to element
+function pulseEffect(elementId) {
+    const element = document.getElementById(elementId);
+    element.classList.add('animate__animated', 'animate__pulse');
+    
+    setTimeout(() => {
+        element.classList.remove('animate__animated', 'animate__pulse');
+    }, 1000);
+}
+
+// Update history count badge
+function updateHistoryCount() {
+    const historyCount = document.getElementById('historyCount');
+    historyCount.textContent = translationHistory.length;
+    
+    if (translationHistory.length > 0) {
+        historyCount.style.display = 'inline-block';
+    } else {
+        historyCount.style.display = 'none';
+    }
+}
+
+// Save history to local storage
+function saveHistory() {
+    try {
+        localStorage.setItem('translationHistory', JSON.stringify(translationHistory));
+    } catch (e) {
+        console.error('Failed to save history to local storage:', e);
+    }
+}
+
+// Load history from local storage
+function loadHistory() {
+    try {
+        const savedHistory = localStorage.getItem('translationHistory');
+        if (savedHistory) {
+            // Parse the saved history and add timestamps back (as Date objects)
+            const parsedHistory = JSON.parse(savedHistory);
+            parsedHistory.forEach(item => {
+                item.timestamp = new Date(item.timestamp);
+            });
+            
+            // Replace current history with saved history
+            translationHistory.length = 0;
+            translationHistory.push(...parsedHistory);
+            
+            // Update UI
+            updateHistoryUI();
+            updateHistoryCount();
+        }
+    } catch (e) {
+        console.error('Failed to load history from local storage:', e);
+    }
+}
+
+function updateHistoryUI() {
+    const historyContainer = document.getElementById('translationHistory');
+    
+    // Clear current history
+    historyContainer.innerHTML = '';
+    
+    if (translationHistory.length === 0) {
+        historyContainer.innerHTML = `
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-clock-history fs-1 d-block mb-3"></i>
+                <p>No translation history yet</p>
+                <p class="small">Your recent translations will appear here</p>
+            </div>
+        `;
+        return;
+    }
+    
+    translationHistory.forEach((item, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.classList.add('card', 'border-0', 'shadow-sm', 'mb-3', 'animate__animated', 'animate__fadeIn');
+        
+        const sourceLanguageName = document.querySelector(`#sourceLanguage option[value="${item.sourceLang}"]`).textContent;
+        const targetLanguageName = document.querySelector(`#targetLanguage option[value="${item.targetLang}"]`).textContent;
+        
+        const time = new Intl.DateTimeFormat('default', {
+            hour: 'numeric',
+            minute: 'numeric'
+        }).format(item.timestamp);
+        
+        const date = new Intl.DateTimeFormat('default', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        }).format(item.timestamp);
+        
+        historyItem.innerHTML = `
+            <div class="card-header bg-transparent border-0 pb-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary me-1">${sourceLanguageName}</span>
+                        <i class="bi bi-arrow-right small"></i>
+                        <span class="badge bg-primary ms-1">${targetLanguageName}</span>
+                    </div>
+                    <small class="text-muted" title="${date}">${time}</small>
+                </div>
+            </div>
+            <div class="card-body pt-2">
+                <div class="small mb-2">
+                    <div class="text-truncate text-primary fw-medium" title="${item.source}">${item.source}</div>
+                    <div class="text-truncate mt-1" title="${item.target}">${item.target}</div>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <button class="btn btn-sm btn-primary rounded-pill restore-btn">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Use
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger rounded-circle remove-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add event listener to restore button
+        historyItem.querySelector('.restore-btn').addEventListener('click', function() {
+            document.getElementById('sourceText').value = item.source;
+            document.getElementById('translatedText').textContent = item.target;
+            document.getElementById('sourceLanguage').value = item.sourceLang;
+            document.getElementById('targetLanguage').value = item.targetLang;
+            updateCharCount('sourceText', 'sourceCharCount');
+            updateCharCount('translatedText', 'targetCharCount', true);
+            
+            // Close sidebar
+            document.getElementById('sidebar').classList.remove('open');
+            
+            // Add highlight effect
+            pulseEffect('sourceText');
+            pulseEffect('translationResult');
+            
+            showToast('Translation restored');
+        });
+        
+        // Add event listener to remove button
+        historyItem.querySelector('.remove-btn').addEventListener('click', function() {
+            historyItem.classList.add('animate__fadeOut');
+            
+            setTimeout(() => {
+                translationHistory.splice(index, 1);
+                updateHistoryUI();
+                updateHistoryCount();
+                saveHistory();
+            }, 500);
+        });
+        
+        historyContainer.appendChild(historyItem);
+    });
+}
+</script>
+{% endblock %}
