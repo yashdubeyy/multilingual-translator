@@ -1,8 +1,8 @@
-# Multilingual Text Translator
+# TranslateNow
 
 A modern, feature-rich web application that enables real-time translation between multiple languages using state-of-the-art machine learning models.
 
-![Multilingual Text Translator](https://i.imgur.com/placeholder.png) <!-- Replace with an actual screenshot of your application -->
+![TranslateNow](https://i.imgur.com/placeholder.png) <!-- Replace with an actual screenshot of your application -->
 
 ## Table of Contents
 - [Overview](#overview)
@@ -19,7 +19,7 @@ A modern, feature-rich web application that enables real-time translation betwee
 
 ## Overview
 
-The Multilingual Text Translator is a web-based application that leverages Hugging Face's MarianMT neural machine translation models to provide high-quality translations between English, French, Spanish, German, Hindi, and potentially other languages. The application features a modern, responsive user interface with real-time translation, history tracking, and various interactive elements that enhance the user experience.
+TranslateNow is a web-based application that leverages Hugging Face's MarianMT neural machine translation models to provide high-quality translations between English, French, Spanish, German, Hindi, and potentially other languages. The application features a modern, responsive user interface with real-time translation, history tracking, and various interactive elements that enhance the user experience.
 
 ## Features
 
@@ -92,7 +92,7 @@ NLP_Project/
 
 1. Clone the repository (or download and extract the ZIP file):
 ```bash
-git clone https://github.com/your-username/multilingual-translator.git
+git clone https://github.com/yashdubeyy/multilingual-translator.git
 cd multilingual-translator
 ```
 

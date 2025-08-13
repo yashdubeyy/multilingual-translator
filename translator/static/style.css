@@ -1,5 +1,150 @@
 /* Copy of main style.css for app-level static directory */
 
+/* Magic UI Styles */
+:root {
+    --gradient-start: #6366f1;
+    --gradient-mid: #8b5cf6;
+    --gradient-end: #d946ef;
+    --shadow-color: rgba(99, 102, 241, 0.2);
+    --glow-color: rgba(139, 92, 246, 0.6);
+}
+
+/* Enhanced translator card */
+.magic-card {
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 40px var(--shadow-color) !important;
+    border: none;
+    margin: 20px 0;
+}
+
+.magic-card:hover {
+    box-shadow: 0 15px 60px var(--shadow-color) !important;
+    transform: translateY(-5px);
+}
+
+.card-header.bg-gradient {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-mid), var(--gradient-end));
+    padding: 20px;
+    border: none;
+}
+
+/* Professional buttons */
+.btn-primary {
+    background-color: #4361ee;
+    color: white;
+    border: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #3a56d4;
+    color: white;
+    box-shadow: 0 2px 5px rgba(67, 97, 238, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Translate button special effect */
+.translate-btn {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Swap button animation */
+.swap-btn {
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.swap-btn:hover {
+    background-color: #e9ecef;
+    transform: scale(1.05);
+}
+
+/* Enhanced form controls */
+.enhanced-select {
+    border: 2px solid #e2e8f0;
+    padding: 12px 45px 12px 20px;
+    border-radius: 12px;
+    font-weight: 500;
+    background-image: none;
+    transition: all 0.3s ease;
+}
+
+.enhanced-select:focus {
+    border-color: var(--gradient-mid);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+.language-select-icon {
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    color: var(--gradient-mid);
+}
+
+/* Magic textarea */
+.magic-textarea {
+    border: 2px solid #e2e8f0;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.magic-textarea:focus {
+    border-color: var(--gradient-mid);
+    box-shadow: 0 5px 25px rgba(139, 92, 246, 0.15) !important;
+}
+
+.text-input-decoration {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0) 70%);
+    pointer-events: none;
+}
+
+/* Translation result container */
+.result-container {
+    background: linear-gradient(to right bottom, #ffffff, #f9fafb);
+    border: none;
+    border-radius: 15px;
+    padding: 25px;
+    min-height: 150px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.translation-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0.7;
+}
+
+/* Progress bar */
+.progress {
+    background-color: #f0f3f8;
+}
+
+.progress-bar {
+    animation: progress-pulse 1.5s infinite;
+}
+
+@keyframes progress-pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
 /* Feature cards */
 .feature-card {
     border-radius: 16px;
@@ -111,6 +256,21 @@ textarea.form-control {
 .btn:hover {
     transform: translateY(-1px);
     transition: all 0.2s ease;
+}
+
+/* Action buttons styling */
+.action-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #495057;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn:hover {
+    background-color: #e9ecef;
+    color: #212529;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
 /* Animated typing effect for the logo */

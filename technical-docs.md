@@ -1,6 +1,6 @@
 # Technical Documentation
 
-This document provides detailed technical information about the Multilingual Text Translator application's implementation, architecture, and core components.
+This document provides detailed technical information about the TranslateNow application's implementation, architecture, and core components.
 
 ## Table of Contents
 - [Architecture Overview](#architecture-overview)
@@ -15,7 +15,7 @@ This document provides detailed technical information about the Multilingual Tex
 
 ## Architecture Overview
 
-The Multilingual Text Translator follows a client-server architecture:
+The TranslateNow application follows a client-server architecture:
 
 ```
 ┌─────────────┐       HTTP       ┌─────────────┐     ┌─────────────┐

@@ -16,8 +16,8 @@ def index():
 @app.route('/translate', methods=['POST'])
 def translate_text():
     text = request.form.get('text', '')
-    source_lang = request.form.get('source_lang', 'en')
-    target_lang = request.form.get('target_lang', 'fr')
+    source_lang = request.form.get('source_lang', 'hi')
+    target_lang = request.form.get('target_lang', 'en')
     
     if not text:
         return jsonify({'status': 'completed', 'translation': ''})

@@ -19,7 +19,7 @@ def print_memory_info():
         print(f"Error getting memory info: {e}")
 
 if __name__ == '__main__':
-    print("Starting Multilingual Text Translator...")
+    print("Starting TranslateNow...")
     print("Running with memory-optimized settings for cloud deployment")
     print("Loading translation models in background. First translations may take longer.")
     

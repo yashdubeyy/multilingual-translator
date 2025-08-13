@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="translator-card">
-    <div class="card-header bg-white">
+<div class="translator-card magic-card">
+    <div class="card-header bg-gradient">
         <div class="row align-items-center">
             <div class="col">
-                <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-translate me-2"></i>Translate Text</h5>
+                <h5 class="mb-0 fw-bold text-white"><i class="bi bi-translate me-2"></i>TranslateNow</h5>
+                <p class="text-white-50 mb-0 small"><i class="bi bi-stars me-1"></i>Professional translation platform</p>
             </div>
             <div class="col-auto">
-                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 shadow-sm" id="clearBtn" title="Clear all text">
+                <button class="btn btn-sm btn-light px-3 shadow-sm action-btn" id="clearBtn" title="Clear all text">
                     <i class="bi bi-eraser"></i> Clear
                 </button>
             </div>
@@ -23,13 +24,13 @@
                         <span class="badge bg-primary bg-opacity-10 text-primary" id="sourceCharCount">0 characters</span>
                     </div>
                     <div class="language-select-wrapper position-relative mb-3">
-                        <select class="form-select shadow-sm" id="sourceLanguage">
+                        <select class="form-select shadow-sm enhanced-select" id="sourceLanguage">
                             {% for code, name in languages.items() %}
-                            <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
+                            <option value="{{ code }}" {% if code == 'hi' %}selected{% endif %}>{{ name }}</option>
                             {% endfor %}
                         </select>
                         <div class="language-select-icon position-absolute">
-                            <i class="bi bi-chevron-down"></i>
+                            <i class="bi bi-translate"></i>
                         </div>
                     </div>
                 </div>
@@ -37,22 +38,23 @@
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <label for="sourceText" class="form-label fw-medium">Enter text to translate:</label>
                         <div>
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill me-1 px-2 py-1" id="detectLanguageBtn" title="Auto detect language">
+                            <button class="btn btn-sm btn-light me-1 px-3 action-btn" id="detectLanguageBtn" title="Auto detect language">
                                 <i class="bi bi-magic me-1"></i>Auto-detect
                             </button>
-                            <button class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" id="clearSourceBtn" title="Clear text">
+                            <button class="btn btn-sm btn-light px-3 action-btn" id="clearSourceBtn" title="Clear text">
                                 <i class="bi bi-x me-1"></i>Clear
                             </button>
                         </div>
                     </div>
                     <div class="position-relative">
-                        <textarea class="form-control shadow-sm" id="sourceText" rows="6" placeholder="Type or paste your text here..." style="white-space: normal; word-wrap: break-word; resize: vertical; overflow-wrap: break-word; padding: 12px;"></textarea>
+                        <textarea class="form-control shadow-sm magic-textarea" id="sourceText" rows="8" placeholder="Type or paste your text here..." style="white-space: normal; word-wrap: break-word; resize: vertical; overflow-wrap: break-word; padding: 16px;"></textarea>
+                        <div class="text-input-decoration"></div>
                     </div>
                     <div class="d-flex justify-content-end mt-2">
-                        <button class="btn btn-sm btn-outline-primary me-2 rounded-pill px-3" id="listenSourceBtn" title="Listen">
+                        <button class="btn btn-sm btn-light me-2 px-3 action-btn" id="listenSourceBtn" title="Listen">
                             <i class="bi bi-volume-up"></i> <span class="d-none d-sm-inline">Listen</span>
                         </button>
-                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" id="copySourceBtn" title="Copy to clipboard">
+                        <button class="btn btn-sm btn-light px-3 action-btn" id="copySourceBtn" title="Copy to clipboard">
                             <i class="bi bi-clipboard"></i> <span class="d-none d-sm-inline">Copy</span>
                         </button>
                     </div>
@@ -60,20 +62,20 @@
             </div>
             
             <div class="col-lg-2 col-md-12 d-flex flex-lg-column flex-row align-items-center justify-content-center mb-4 mb-lg-0">
-                <button class="btn btn-primary mb-lg-3 me-3 me-lg-0 shadow-sm rounded-circle p-2 p-sm-3" id="swapBtn" title="Swap languages">
+                <button class="btn btn-light mb-lg-3 me-3 me-lg-0 shadow-sm rounded-circle p-2 p-sm-3 swap-btn" id="swapBtn" title="Swap languages">
                     <i class="bi bi-arrow-left-right"></i>
                 </button>
-                <button class="btn btn-primary shadow-sm px-3 px-sm-4 py-2 rounded-pill fw-medium" id="translateBtn">
-                    Translate <i class="bi bi-arrow-right ms-1"></i>
+                <button class="btn btn-primary shadow-sm px-4 px-sm-5 py-2 py-sm-3 rounded fw-medium translate-btn" id="translateBtn">
+                    Translate <i class="bi bi-translate ms-1"></i>
                 </button>
                 <div class="spinner-border text-primary mt-lg-3 ms-3 ms-lg-0" id="loadingSpinner" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
-                <div class="progress mt-lg-3 mt-0 ms-3 ms-lg-0 w-100 d-none d-lg-block" style="height: 5px; border-radius: 10px; overflow: hidden;">
+                <div class="progress mt-lg-3 mt-0 ms-3 ms-lg-0 w-100 d-none d-lg-block" style="height: 6px; border-radius: 10px; overflow: hidden;">
                     <div class="progress-bar bg-primary" id="translationProgress" role="progressbar" style="width: 0%"></div>
                 </div>
                 <!-- Mobile progress bar, horizontal orientation -->
-                <div class="progress mt-3 w-100 d-block d-lg-none" style="height: 5px; border-radius: 10px; overflow: hidden;">
+                <div class="progress mt-3 w-100 d-block d-lg-none" style="height: 6px; border-radius: 10px; overflow: hidden;">
                     <div class="progress-bar bg-primary" id="translationProgressMobile" role="progressbar" style="width: 0%"></div>
                 </div>
             </div>
@@ -85,26 +87,27 @@
                         <span class="badge bg-primary bg-opacity-10 text-primary" id="targetCharCount">0 characters</span>
                     </div>
                     <div class="language-select-wrapper position-relative mb-3">
-                        <select class="form-select shadow-sm" id="targetLanguage">
+                        <select class="form-select shadow-sm enhanced-select" id="targetLanguage">
                             {% for code, name in languages.items() %}
-                            <option value="{{ code }}" {% if code == 'fr' %}selected{% endif %}>{{ name }}</option>
+                            <option value="{{ code }}" {% if code == 'en' %}selected{% endif %}>{{ name }}</option>
                             {% endfor %}
                         </select>
                         <div class="language-select-icon position-absolute">
-                            <i class="bi bi-chevron-down"></i>
+                            <i class="bi bi-translate"></i>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="translatedText" class="form-label fw-medium">Translation:</label>
-                    <div id="translationResult" class="animate__animated shadow-sm">
+                    <div id="translationResult" class="animate__animated shadow-sm result-container">
+                        <div class="translation-indicator"><i class="bi bi-stars text-primary"></i></div>
                         <p id="translatedText" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;"></p>
                     </div>
                     <div class="d-flex justify-content-end mt-2">
-                        <button class="btn btn-sm btn-outline-primary me-2 rounded-pill px-3" id="listenTargetBtn" title="Listen">
+                        <button class="btn btn-sm btn-light me-2 px-3 action-btn" id="listenTargetBtn" title="Listen">
                             <i class="bi bi-volume-up"></i> <span class="d-none d-sm-inline">Listen</span>
                         </button>
-                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" id="copyTargetBtn" title="Copy to clipboard">
+                        <button class="btn btn-sm btn-light me-2 px-3 action-btn" id="copyTargetBtn" title="Copy to clipboard">
                             <i class="bi bi-clipboard"></i> <span class="d-none d-sm-inline">Copy</span>
                         </button>
                     </div>
@@ -114,41 +117,9 @@
     </div>
 </div>
 
-<!-- Add additional features cards -->
-<div class="row g-4 mb-4">
-    <div class="col-lg-4 col-md-6 col-12">
-        <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center py-4">
-                <div class="feature-icon bg-warning bg-opacity-10 rounded-circle mx-auto mb-3">
-                    <i class="bi bi-lightning-charge-fill text-warning fs-3"></i>
-                </div>
-                <h5 class="fw-bold">Fast Translation</h5>
-                <p class="text-muted mb-0">Quickly translate between multiple languages with optimized performance</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-6 col-12">
-        <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center py-4">
-                <div class="feature-icon bg-primary bg-opacity-10 rounded-circle mx-auto mb-3">
-                    <i class="bi bi-globe2 text-primary fs-3"></i>
-                </div>
-                <h5 class="fw-bold">Multiple Languages</h5>
-                <p class="text-muted mb-0">Support for English, French, Spanish, German, Hindi and more</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-6 col-12 mx-md-auto">
-        <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center py-4">
-                <div class="feature-icon bg-success bg-opacity-10 rounded-circle mx-auto mb-3">
-                    <i class="bi bi-clock-history text-success fs-3"></i>
-                </div>
-                <h5 class="fw-bold">Translation History</h5>
-                <p class="text-muted mb-0">Keep track of your translations with our convenient history sidebar</p>
-            </div>
-        </div>
-    </div>
+<!-- Small credits section at the bottom -->
+<div class="text-center mt-3 mb-2">
+    <small class="text-muted">TranslateNow | <i class="bi bi-shield-check text-success me-1"></i>Secure and accurate translations</small>
 </div>
 {% endblock %}
 
@@ -271,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     });
     
-    // Auto-detect language button (simulated)
+    // Auto-detect language button (uses basic language detection logic)
     document.getElementById('detectLanguageBtn').addEventListener('click', function() {
         const sourceText = document.getElementById('sourceText').value;
         if (!sourceText.trim()) {
@@ -286,10 +257,31 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.add('btn-secondary');
         this.classList.remove('btn-outline-secondary');
         
-        // Simulate detection (would be replaced with actual API call)
+        // Basic language detection based on character sets and patterns
         setTimeout(() => {
-            const languages = ['en', 'fr', 'es', 'de', 'hi'];
-            const detectedLang = languages[Math.floor(Math.random() * languages.length)];
+            let detectedLang = 'en'; // Default to English
+            
+            // Hindi detection - checks for Devanagari Unicode range
+            const hindiPattern = /[\u0900-\u097F]/;
+            if (hindiPattern.test(sourceText)) {
+                detectedLang = 'hi';
+            }
+            // Spanish detection - check for Spanish specific characters and common words
+            else if (/[áéíóúüñ¿¡]/.test(sourceText.toLowerCase()) || 
+                     /\b(el|la|los|las|es|están|hola|gracias|buenos|días|cómo|por|qué)\b/.test(sourceText.toLowerCase())) {
+                detectedLang = 'es';
+            }
+            // German detection - check for German specific characters and common words
+            else if (/[äöüß]/.test(sourceText.toLowerCase()) || 
+                     /\b(der|die|das|und|ist|sind|haben|ich|du|sie|wir|nicht|ein|eine)\b/.test(sourceText.toLowerCase())) {
+                detectedLang = 'de';
+            }
+            // French detection - check for French specific characters and common words
+            else if (/[éèêëàâäæçéèêëîïôœùûüÿ]/.test(sourceText.toLowerCase()) || 
+                     /\b(le|la|les|un|une|des|et|est|sont|je|tu|il|elle|nous|vous|ils|elles|ne|pas)\b/.test(sourceText.toLowerCase())) {
+                detectedLang = 'fr';
+            }
+            
             document.getElementById('sourceLanguage').value = detectedLang;
             
             // Highlight the dropdown to indicate change
@@ -301,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.innerHTML = originalContent;
             this.disabled = false;
             this.classList.remove('btn-secondary');
-            this.classList.add('btn-outline-secondary');
+            this.classList.add('btn-light');
             
             // Show feedback toast
             const detectedLanguage = document.querySelector(`#sourceLanguage option[value="${detectedLang}"]`).textContent;
@@ -311,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (sourceText.trim()) {
                 translateText();
             }
-        }, 1000);
+        }, 800);
     });
     
     // Create toast container
@@ -490,12 +482,17 @@ function copyToClipboard(elementId, isContent = false) {
         
         btn.innerHTML = '<i class="bi bi-check2"></i> Copied';
         btn.classList.add('btn-success');
+        btn.classList.remove('btn-light');
         btn.classList.remove('btn-outline-primary');
         
         setTimeout(() => {
             btn.innerHTML = originalHtml;
             btn.classList.remove('btn-success');
-            btn.classList.add('btn-outline-primary');
+            if (isContent) {
+                btn.classList.add('btn-light');
+            } else {
+                btn.classList.add('btn-light');
+            }
         }, 1500);
         
         // Show toast notification

@@ -1,4 +1,4 @@
-# Multilingual Text Translator
+# TranslateNow
 
 A powerful web-based translator application using Flask and Hugging Face Transformers.
 

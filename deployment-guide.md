@@ -1,6 +1,6 @@
-# Deployment Guide for Multilingual Text Translator
+# Deployment Guide for TranslateNow
 
-This guide provides detailed instructions for deploying the Multilingual Text Translator application on Render.
+This guide provides detailed instructions for deploying the TranslateNow application on Render.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -16,7 +16,7 @@ This guide provides detailed instructions for deploying the Multilingual Text Tr
 
 Before deploying your application, make sure you have:
 
-- A complete, working version of the Multilingual Text Translator on your local machine
+- A complete, working version of the TranslateNow application on your local machine
 - A GitHub account
 - Git installed on your computer
 - The following files in your project:
@@ -53,7 +53,7 @@ git commit -m "Initial commit for deployment"
 ### 4. Link Local Repository to GitHub
 
 ```bash
-git remote add origin https://github.com/your-username/multilingual-translator.git
+git remote add origin https://github.com/yashdubeyy/multilingual-translator.git
 git branch -M main
 git push -u origin main
 ```
