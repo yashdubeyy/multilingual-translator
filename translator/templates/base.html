@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         :root {
             --primary-color: #6366f1;
@@ -448,7 +449,7 @@
         </header>
         
         <!-- Main Content Area -->
-        <div class="main-content animate__animated animate__fadeIn">
+        <div class="main-content animate__animated animate__fadeIn" style="transition: all 0.3s ease;">
             {% block content %}{% endblock %}
             
             <footer class="mt-4 pt-3 text-center">

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 import os
 from .translator import Translator
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 translator = Translator()
 
 # Configure for production

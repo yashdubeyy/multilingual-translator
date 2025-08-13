@@ -1,4 +1,81 @@
-/* Additional custom styles for the translator app */
+/* Copy of main style.css for app-level static directory */
+
+/* Feature cards */
+.feature-card {
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+/* Custom language select styling */
+.language-select-wrapper {
+    display: block;
+    position: relative;
+}
+
+.language-select-icon {
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--primary-color);
+}
+
+.language-select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px; /* Space for the icon */
+    cursor: pointer;
+    background-color: white;
+    border-color: var(--border-color);
+    transition: all 0.2s;
+}
+
+.language-select-wrapper select:hover {
+    border-color: var(--primary-color);
+}
+
+.language-select-wrapper select:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.highlight-select {
+    animation: pulse-border 0.8s ease;
+}
+
+@keyframes pulse-border {
+    0% { border-color: var(--border-color); }
+    50% { border-color: var(--primary-color); }
+    100% { border-color: var(--border-color); }
+}
+
+/* Fix select option styles */
+.form-select option {
+    padding: 10px;
+    font-size: 0.95rem;
+}
 
 /* Fix for textarea and text input fields */
 textarea.form-control {
