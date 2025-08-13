@@ -37,5 +37,21 @@ def translation_status():
     result = translator.get_translation_result(task_id)
     return jsonify(result)
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for monitoring"""
+    import psutil
+    memory_info = psutil.virtual_memory()
+    health_data = {
+        'status': 'ok',
+        'memory': {
+            'total': memory_info.total / (1024 * 1024),  # Convert to MB
+            'available': memory_info.available / (1024 * 1024),  # Convert to MB
+            'percent_used': memory_info.percent
+        },
+        'languages_available': list(translator.languages.keys())
+    }
+    return jsonify(health_data)
+
 if __name__ == '__main__':
     app.run(debug=True)
