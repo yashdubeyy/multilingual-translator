@@ -40,17 +40,24 @@ def translation_status():
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint for monitoring"""
-    import psutil
-    memory_info = psutil.virtual_memory()
     health_data = {
         'status': 'ok',
-        'memory': {
+        'languages_available': list(translator.languages.keys())
+    }
+    
+    try:
+        import psutil
+        memory_info = psutil.virtual_memory()
+        health_data['memory'] = {
             'total': memory_info.total / (1024 * 1024),  # Convert to MB
             'available': memory_info.available / (1024 * 1024),  # Convert to MB
             'percent_used': memory_info.percent
-        },
-        'languages_available': list(translator.languages.keys())
-    }
+        }
+    except ImportError:
+        health_data['memory'] = 'psutil not installed'
+    except Exception as e:
+        health_data['memory_error'] = str(e)
+    
     return jsonify(health_data)
 
 if __name__ == '__main__':
