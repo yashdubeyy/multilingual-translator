@@ -1,27 +1,24 @@
-# TranslateNow
+# LinguaSync: Multilingual Translator
 
 A modern, feature-rich web application that enables real-time translation between multiple languages using state-of-the-art machine learning models.
 
-#Visit : https://translate-now.onrender.com/
 <img width="1919" height="1079" alt="Screenshot 2025-08-13 234612" src="https://github.com/user-attachments/assets/82791513-1a6e-4eb0-b881-da9eb911a320" />
 
 
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
+- [Docker Deployment](#docker-deployment)
 - [Technology Stack](#technology-stack)
 - [Project Structure](#project-structure)
-- [Installation](#installation)
+- [Manual Installation](#manual-installation)
 - [Usage](#usage)
 - [Translation Process](#translation-process)
-- [Responsive Design](#responsive-design)
-- [Deployment](#deployment)
 - [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
 
 ## Overview
 
-TranslateNow is a web-based application that leverages Hugging Face's MarianMT neural machine translation models to provide high-quality translations between English, French, Spanish, German, Hindi, and potentially other languages. The application features a modern, responsive user interface with real-time translation, history tracking, and various interactive elements that enhance the user experience.
+LinguaSync is a web-based application that leverages Hugging Face's MarianMT neural machine translation models to provide high-quality translations between English, French, Spanish, German, Hindi, and potentially other languages. The application features a modern, responsive user interface with real-time translation, history tracking, and various interactive elements that enhance the user experience.
 
 ## Features
 
@@ -57,21 +54,25 @@ TranslateNow is a web-based application that leverages Hugging Face's MarianMT n
 - **Bootstrap Icons**: Icon library
 
 ### Backend
-- **Python 3.13**: Core programming language
+- **Python 3.10**: Core programming language
 - **Flask 2.3.2**: Web framework for handling routes and serving the application
 - **Hugging Face Transformers 4.30.2**: Machine learning library for translation models
-- **PyTorch 2.6.0**: Deep learning framework supporting the translation models
-- **Gunicorn/Uvicorn**: WSGI/ASGI server for production deployment
+- **PyTorch 2.0.1**: Deep learning framework supporting the translation models
+- **Docker**: Containerization for easy deployment
 
 ## Project Structure
 
 ```
-NLP_Project/
-├── build.sh                # Build script for Render deployment
+multilingual-translator/
+├── Dockerfile              # Docker build configuration
+├── docker-compose.yml      # Docker deployment configuration
+├── DOCKER_HOWTO.md         # Docker deployment instructions
+├── DOCKER_DEPLOY_GUIDE.md  # Detailed Docker deployment guide
+├── docker-deploy.bat       # Windows script for Docker deployment
 ├── main.py                 # Entry point for the application
-├── Procfile               # Process file for Render/Heroku
-├── render.yaml            # Configuration for Render deployment
-├── requirements.txt       # Python dependencies
+├── Procfile                # Process file for production servers
+├── requirements.txt        # Python dependencies
+├── runtime.txt             # Python version specification
 ├── static/
 │   └── style.css          # Custom CSS styles
 └── translator/
@@ -83,10 +84,63 @@ NLP_Project/
         └── index.html     # Main translator interface
 ```
 
-## Installation
+## Docker Deployment
+
+The easiest way to deploy this application is with Docker:
 
 ### Prerequisites
-- Python 3.8 or higher
+- [Docker](https://www.docker.com/products/docker-desktop/) installed on your system
+- [Docker Compose](https://docs.docker.com/compose/install/) (usually included with Docker Desktop)
+
+### Quick Start
+
+For Windows users, run:
+```
+docker-deploy.bat
+```
+
+For manual deployment, follow these steps:
+
+### Step 1: Build the Docker Image
+
+```bash
+docker build -t multilingual-translator .
+```
+
+### Step 2: Run with Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+Your application will now be available at http://localhost:5000
+
+### Managing Your Docker Container
+
+#### View Logs
+
+```bash
+docker logs multilingual_translator
+```
+
+#### Stop the Container
+
+```bash
+docker-compose down
+```
+
+#### Restart the Container
+
+```bash
+docker-compose restart
+```
+
+See [DOCKER_HOWTO.md](DOCKER_HOWTO.md) for more detailed Docker instructions.
+
+## Manual Installation
+
+### Prerequisites
+- Python 3.10 or higher
 - pip (Python package installer)
 - Git (optional, for cloning the repository)
 
@@ -169,58 +223,7 @@ The translation process works as follows:
 
 This approach ensures the UI remains responsive even during computationally intensive translations, especially when working with larger text blocks.
 
-## Responsive Design
 
-The application is designed to work seamlessly across various screen sizes:
-
-### Desktop (>992px)
-- Full-width layout with side-by-side source and target text areas
-- Spacious controls and larger text areas
-- Full feature set visible
-
-### Tablet (768px - 992px)
-- Adapted layout with optimized spacing
-- Slightly reduced padding and margins
-- All features remain accessible
-
-### Mobile (< 768px)
-- Stacked layout with source text area above target
-- Compact controls with icon-only buttons where appropriate
-- Swipe gestures for opening/closing the sidebar
-- Touch-optimized button sizes and spacing
-
-### Technical Implementation Details
-- CSS media queries for responsive breakpoints
-- Bootstrap grid system for layout changes
-- JavaScript viewport adjustments for mobile browsers
-- Touch event handling for swipe gestures
-- Mobile-specific optimizations for animations and interactions
-
-## Deployment
-
-The application is configured for deployment on Render, a cloud platform that makes it easy to deploy web services.
-
-### Deployment Files
-- `render.yaml`: Defines the service configuration for Render
-- `build.sh`: Installation script that runs during deployment
-- `Procfile`: Defines the command to start the application
-- `requirements.txt`: Lists all Python dependencies
-
-### Deployment Steps
-1. Push your code to a GitHub repository
-2. Sign up for a Render account at [render.com](https://render.com)
-3. Connect your GitHub account to Render
-4. Create a new Web Service and select your repository
-5. Render will automatically detect your `render.yaml` configuration
-6. Click "Create Web Service" to start the deployment process
-
-See the full [Deployment Guide](deployment-guide.md) for detailed instructions.
-
-### Important Considerations
-- The free tier of Render has memory limitations that may affect performance with multiple translation models
-- Services on the free tier sleep after 15 minutes of inactivity
-- Initial load time may be longer due to model loading
-- Consider implementing model caching strategies for production deployments
 
 ## Future Enhancements
 
@@ -232,22 +235,6 @@ Potential improvements for future versions:
 - **Custom Dictionaries**: Allow users to create custom translations for specific terms
 - **Translation Memory**: Improved caching of common translations
 - **Speech-to-Text**: Direct voice input for translation
-- **User Accounts**: Save translations across devices with user accounts
-- **API Access**: Public API for integrating translation capabilities into other applications
-- **Mobile Apps**: Native mobile applications for iOS and Android
-
-## Contributing
-
-Contributions are welcome! If you'd like to improve the Multilingual Text Translator:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
-
-Please ensure your code follows the existing style and include appropriate tests.
 
 ---
 

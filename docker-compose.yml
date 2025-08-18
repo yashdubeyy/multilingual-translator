@@ -1,0 +1,12 @@
+services:
+  translator:
+    build: .
+    container_name: linguasync_translator
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DOCKER_DEPLOYMENT=true
+    volumes:
+      - ./:/app
+    restart: unless-stopped

@@ -5,6 +5,9 @@ import time
 import traceback
 from translator.app import app
 
+# For Docker, Heroku and other deployment platforms
+os.environ['MALLOC_TRIM_THRESHOLD_'] = '65536'  # More aggressive memory trimming
+
 def print_memory_info():
     """Print memory usage information"""
     try:
