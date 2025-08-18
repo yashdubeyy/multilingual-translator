@@ -1,1 +1,1 @@
-web: gunicorn 'translator.app:app' --log-file -
+web: gunicorn -w 1 --timeout 300 'translator.app:app' --log-file -

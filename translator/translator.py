@@ -70,16 +70,25 @@ class Translator:
         print(f"Loading model: {model_name}")
         try:
             # Use more memory-efficient loading options
+            self.loaded_tokenizers[model_name] = MarianTokenizer.from_pretrained(model_name)
             self.loaded_models[model_name] = MarianMTModel.from_pretrained(
                 model_name, 
                 low_cpu_mem_usage=True,
-                torch_dtype=torch.float16  # Use half-precision to save memory
+                torch_dtype=torch.float16,  # Use half-precision to save memory
+                local_files_only=False,     # Allow downloading if needed
+                force_download=False        # Don't force download if already cached
             )
-            self.loaded_tokenizers[model_name] = MarianTokenizer.from_pretrained(model_name)
+            
+            # Force garbage collection after loading to minimize memory impact
+            import gc
+            gc.collect()
             
             return self.loaded_models[model_name], self.loaded_tokenizers[model_name]
         except Exception as e:
             print(f"Error loading model {model_name}: {e}")
+            # Make error message more descriptive for debugging
+            import traceback
+            print(f"Detailed error: {traceback.format_exc()}")
             raise
     
     def _translation_worker(self):
