@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: multilingual-translator
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 --worker-class uvicorn.workers.UvicornWorker translator.app:app"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: RENDER
+        value: true
