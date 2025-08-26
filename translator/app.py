@@ -8,22 +8,14 @@ from .translator import Translator
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 translator = None  # Initialize lazily to improve startup time
 
-# Configure for production environments
-is_production = any([
-    os.environ.get('RENDER', False),
-    os.environ.get('DOCKER_DEPLOYMENT', False),
-    os.environ.get('RAILWAY_DEPLOY', False),
-    os.environ.get('HEROKU_APP_NAME', False),
-    os.environ.get('DYNO', False),  # Heroku
-])
-
-app.config['PRODUCTION'] = is_production
+# Configure for Hugging Face Spaces
+is_hf_spaces = os.environ.get('SPACE_ID') is not None
+app.config['HF_SPACES'] = is_hf_spaces
 
 # Print diagnostic information on startup
-print(f"Starting LinguaSync Translator in {'production' if is_production else 'development'} mode")
+print(f"Starting LinguaSync Translator for {'Hugging Face Spaces' if is_hf_spaces else 'local development'}")
 print(f"Python version: {platform.python_version()}")
 print(f"Platform: {platform.system()} {platform.release()}")
-print(f"System memory: {os.environ.get('MEMORY_AVAILABLE', 'unknown')}")
 
 # Lazy initialization of translator
 def get_translator():
@@ -71,22 +63,9 @@ def health_check():
     translator_instance = get_translator()
     health_data = {
         'status': 'ok',
-        'languages_available': list(translator_instance.languages.keys())
+        'languages_available': list(translator_instance.languages.keys()),
+        'platform': 'Hugging Face Spaces' if app.config.get('HF_SPACES') else 'Local'
     }
-    
-    try:
-        import psutil
-        memory_info = psutil.virtual_memory()
-        health_data['memory'] = {
-            'total': memory_info.total / (1024 * 1024),  # Convert to MB
-            'available': memory_info.available / (1024 * 1024),  # Convert to MB
-            'percent_used': memory_info.percent
-        }
-    except ImportError:
-        health_data['memory'] = 'psutil not installed'
-    except Exception as e:
-        health_data['memory_error'] = str(e)
-    
     return jsonify(health_data)
 
 if __name__ == '__main__':
