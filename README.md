@@ -19,7 +19,7 @@ A modern, professional web application for real-time translation between multipl
 
 ## 🚀 Live Demo
 
-**Deployed on Hugging Face Spaces**: [Try LinguaSync Now](https://huggingface.co/spaces/yashdubey/multilingual-translator)
+**Deployed on Hugging Face Spaces**: [Try TranslateNow](https://huggingface.co/spaces/yashdubey/multilingual-translator)
 
 ## 🏗️ Architecture Overview
 
