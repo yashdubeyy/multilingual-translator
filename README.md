@@ -1,4 +1,4 @@
-# LinguaSync: Multilingual Translator
+# TranslateNow: Multilingual Translator
 
 A modern, professional web application for real-time translation between multiple languages using state-of-the-art Hugging Face MarianMT models.
 
