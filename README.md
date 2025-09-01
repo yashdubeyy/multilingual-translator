@@ -4,6 +4,10 @@ A modern, professional web application for real-time translation between multipl
 
 <img width="1919" height="1079" alt="Screenshot 2025-08-13 234612" src="https://github.com/user-attachments/assets/82791513-1a6e-4eb0-b881-da9eb911a320" />
 
+## Flowchart
+<img width="1697" height="930" alt="Flowchart" src="https://github.com/user-attachments/assets/4afef130-772d-4320-aa26-60202951b205" />
+
+
 ## 🌟 Features
 
 - **5 Languages**: English, French, Spanish, German, Hindi
